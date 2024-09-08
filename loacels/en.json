@@ -1,0 +1,6 @@
+{
+    "check_id":"invalid Mongo id",
+    "check_category_name":"Category Name is Required",
+    "check_category_NameLenght":"Name length must be between 2 and 50",
+    "not_found":"Document not found"
+}
