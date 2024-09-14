@@ -31,14 +31,14 @@ export const resizeImages = asyncHandler(async (req: Request, res: Response, nex
         }
         if (req.files.images) {
             req.body.images = [];
-            for (const [index, img] of req.files.images.entries()) {
-                const imageName = `Product-${Date.now()}N${index + 1}.png`;
+            await Promise.all(req.files.images.map(async (img: any, index: number) => {
+            const imageName: string = `Product-${Date.now()}N${index + 1}.png`;
                 await sharp(img.buffer)
-                    .toFormat('png')
-                    .png({ quality: 95 })
-                    .toFile(`uploads/products/${imageName}`);
-                req.body.images.push(imageName);
-            }
+                .toFormat('png')
+                .png({ quality: 95 })
+                .toFile(`uploads/products/${imageName}`)
+                req.body.images.push(imageName)
+            }))
         }        
     }
     next()

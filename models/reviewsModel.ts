@@ -14,6 +14,8 @@ reviewsSchema.statics.calacRatingAndQuantity = async function (productId) {
         {$match: {product: productId}},
         {$group: {_id: 'product', avgRating: {$avg: '$rating'}, ratingQuantity: {$sum: 1}}}
     ]);
+    console.log(productId);
+    console.log(result);
     if(result.length > 0){
         await productsModel.findByIdAndUpdate(productId, {
             ratingAverage:result[0].avgRating,
@@ -40,6 +42,11 @@ reviewsSchema.post<Reviews>('findOneAndDelete', async function (doc) {
 
 reviewsSchema.pre<Reviews>(/^find/, function(next) {
     this.populate({path: 'user' , select: 'name image'})
+    next()
+})
+
+reviewsSchema.pre<Reviews>('find', function (next) {
+    this.populate({ path: 'product', select: 'name cover' })
     next()
 })
 
