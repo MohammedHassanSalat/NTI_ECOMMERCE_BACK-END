@@ -37,7 +37,7 @@ export const protectRoutes = asyncHandler(async (req: Request, res: Response, ne
     if (!currentUser) { return next(new ApiErrors("user doesn't exist", 401)) }
     // 4- check if the password has changed
     if (currentUser.passwordChangedAt instanceof Date) {
-        const changedPasswordTime: number = (currentUser.passwordChangedAt.getTime() / 1000);
+        const changedPasswordTime: number = parseInt((currentUser.passwordChangedAt.getTime() / 1000).toString());
         if (changedPasswordTime > decodedToken.iat) { return next(new ApiErrors('please login again', 401)) }
     }
     req.user = currentUser;
