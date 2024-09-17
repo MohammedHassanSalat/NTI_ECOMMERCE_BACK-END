@@ -3,6 +3,7 @@ import { check } from "express-validator";
 import validatorMiddleware from "../../middlewares/validatorMiddleware";
 import subCategoriesModel from "../../models/subCategoriesModel";
 import { SubCategories } from "../../interfaces/subCategories";
+import categoriesModel from "../../models/categoriesModel";
 
 export const createCategoryValidator: RequestHandler[] = [
     check('name')
@@ -11,6 +12,11 @@ export const createCategoryValidator: RequestHandler[] = [
     })
     .isLength({ min: 2, max: 50 }).withMessage((val, {req}) => {
         return (req.__('check_category_NameLenght'))
+    })
+    .custom(async (val: string) => {
+        const category = await categoriesModel.findOne({ name: val });
+        if (category) { throw new Error('category is already exist') };
+        return true;
     }),
     validatorMiddleware
 ]
